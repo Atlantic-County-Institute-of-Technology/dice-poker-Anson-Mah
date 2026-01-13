@@ -1,4 +1,3 @@
-#python #programming #project/outline 
 # Unit 5 Project -  Dice Poker
 
 ## Overview
