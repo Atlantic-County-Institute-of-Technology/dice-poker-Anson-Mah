@@ -1,59 +1,62 @@
+from dicehandler import Dice
+from dicehandler import DiceHandler
 import random
+import os
 
-class Dice:
-	default_value = 1
+def clear_terminal(): os.system('cls' if os.name == 'nt' else 'clear')
 
-	def __init__(self, faces):
-		self.faces = faces  # How many sides does the dice have?
-		self.value = self.default_value  # What side did the dice land on?
+def main():
+	while True:
+		# Initial Menu
+		print("------------------------------")
+		print("[0]. Quit Program")
+		print('[1]. Play Dice Poker')
+		print('[2]. How to Play Dice Poker')
 
-	def roll(self):
-		self.value = random.randint(1, self.faces)
+		# Input Correction
+		# If the user's input would break the program, it changes the input such that it will not break the program.
+		try:
+			selection = int(input("Select an Option: "))
+		except ValueError:
+			# On ValueError, the input variable is instead set to an integer not corresponding to anything on the menu, which will bring you back to the initial menu
+			selection = 9
 
-	def get_value(self):
-		return self.value
-	
-class DiceHandler:
-	def __init__(self):
-		self.dice_list = [Dice(6), Dice(6), Dice(6), Dice(6), Dice(6)]
-		self.keep_list = [False, False, False, False, False]
+		clear_terminal()
 
-	def roll(self):
-		for i in range(len(self.dice_list)):
-			if self.keep_list[i] == False:
-				self.dice_list[i].roll()
-			else:
-				continue
+		# Runs different functions based off of what you inputted
+		match selection:
+			case 0:
+				print("Program Terminated")
+				exit()
+			case 1:
+				play()
+			case 2:
+				how_to_play()
 
-	def show(self):
-		value_list = []
-		for i in self.dice_list:
-			value_list.append(i.get_value())
-		return value_list
+def play():
+	game = DiceHandler()
+	game.roll()
+	while True:
+		print('Select some dice to Keep.')
+		print("------------------------------")
+		for i in range(game.hand_size):
+			print(f"{i+1}. [{"X" if game.keep_list[i] == True else ""}] {game.dice_list[i].get_value()}")
 
-	def keep(self, index):
-		self.keep_list[index] = True
+		try:
+			selection = int(input("Input: "))
+		except ValueError:
+			selection = 0
 
-	def score(self):
-		pass
+		try:
+			game.toggle_keep(selection-1)
+		except IndexError:
+			clear_terminal()
 
-def test1():
-	sigma = Dice(6)
-	for i in range(100):
-		sigma.roll()
-		print(sigma.get_value())
+		clear_terminal()
 
-def test2():
-	skibidi = DiceHandler()
-
-	skibidi.roll()
-	print(skibidi.show())
-	
-	skibidi.keep(1)
-	skibidi.keep(3)
-	
-	skibidi.roll()
-	print(skibidi.show())
+def how_to_play():
+	pass
 
 if __name__ == "__main__":
-	test2()
+	clear_terminal()
+	play()
