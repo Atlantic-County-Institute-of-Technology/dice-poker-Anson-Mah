@@ -1,6 +1,4 @@
-from dicehandler import Dice
 from dicehandler import DiceHandler
-import random
 import os
 
 def clear_terminal(): os.system('cls' if os.name == 'nt' else 'clear')
@@ -11,7 +9,9 @@ def main():
 		print("------------------------------")
 		print("[0]. Quit Program")
 		print('[1]. Play Dice Poker')
-		print('[2]. How to Play Dice Poker')
+		print("[2]. View Settings")
+		print("[3]. Change Settings")
+		print('[4]. How to Play Dice Poker')
 
 		# Input Correction
 		# If the user's input would break the program, it changes the input such that it will not break the program.
@@ -31,32 +31,138 @@ def main():
 			case 1:
 				play()
 			case 2:
+				view_settings()
+			case 3:
+				change_settings()
+			case 4:
 				how_to_play()
 
 def play():
-	game = DiceHandler()
+	global dice_faces, max_rolls
+
+	current_rolls = 0
+
+	game = DiceHandler(dice_faces)
 	game.roll()
+	current_rolls += 1
 	while True:
+		print(f'Roll {current_rolls}/{max_rolls}')
 		print('Select some dice to Keep.')
 		print("------------------------------")
 		for i in range(game.hand_size):
 			print(f"{i+1}. [{"X" if game.keep_list[i] == True else ""}] {game.dice_list[i].get_value()}")
+		print(f"{game.hand_size+1}. Roll Dice")
+		print(f"{game.hand_size+2}. End Round")
 
+		# Input Validation
 		try:
 			selection = int(input("Input: "))
 		except ValueError:
 			selection = 0
+		if selection < 0:
+			selection = -selection
 
+		# Toggle Dice Keep
 		try:
 			game.toggle_keep(selection-1)
-		except IndexError:
 			clear_terminal()
+		except IndexError:
+			pass
+
+		# Roll Dice Again
+		if selection == game.hand_size + 1:
+			if current_rolls < max_rolls:
+				game.roll()
+				current_rolls += 1
+			else:
+				print("\nYou do not have any more rolls left. The round has automatically ended.")
+				break
+		
+		# End Round
+		if selection == game.hand_size + 2:
+			print("\nYou have ended the round.")
+			break
 
 		clear_terminal()
+
+	print(f"Your Hand: {game.show()}")
+	print(f"Result: {game.score()}")
+
+def view_settings():
+	global dice_faces, max_rolls
+	print("Current Settings")
+	print("-----------------")
+	print(f"Dice Faces: {dice_faces}")
+	print(f"Maximum Rolls: {max_rolls}")
+
+def change_settings():
+	global dice_faces, max_rolls
+
+	# Settings Menu
+	print("Which settings would you like to change?")
+	print("-----------------------------------------")
+	print("[0]. Exit Settings")
+	print("[1]. Dice Faces")
+	print("[2]. Maximum Rolls")
+	print("[3]. Restore Default Settings")
+
+	# Input Correction
+	# If the user's input would break the program, it changes the input such that it will not break the program.
+	try:
+		selection = int(input("Select an Option: "))
+	except ValueError:
+		# On ValueError, the input variable is instead set to an integer not corresponding to anything on the menu, which will bring you back to the initial menu
+		selection = 9
+
+	match selection:
+		case 0:
+			clear_terminal()
+			main()
+		case 1:
+			# Dice Faces
+			while True:
+				try:
+					user_input = int(input("Input desired # of Dice Faces: "))
+				except ValueError:
+					print("\nPlease input a positive integer.")
+					continue
+				if user_input <= 0:
+					print("\nYou have inputted a non-positive integer. Please input a positive integer.")
+				else:
+					dice_faces = user_input
+					clear_terminal()
+					print(f"# of Dice Faces set to {dice_faces}.\n")
+					break
+		case 2:
+			# Maximum Rolls
+			while True:
+				try:
+					user_input = int(input("Input desired # for Maximum Rolls: "))
+				except ValueError:
+					print("\nPlease input a positive integer.")
+					continue
+				if user_input <= 0:
+					print("\nYou have inputted a non-positive integer. Please input a positive integer.")
+				else:
+					max_rolls = user_input
+					clear_terminal()
+					print(f"# of Maximum Rolls set to {max_rolls}.\n")
+					break
+		case 3:
+			# Restore Default Settings
+			dice_faces = 6
+			max_rolls = 3
+			clear_terminal()
+			print("Default Settings have been restored.\n")
+
+	change_settings()
 
 def how_to_play():
 	pass
 
+# Game Settings
+dice_faces = 6
+max_rolls = 3
+
 if __name__ == "__main__":
-	clear_terminal()
-	play()
+	main()

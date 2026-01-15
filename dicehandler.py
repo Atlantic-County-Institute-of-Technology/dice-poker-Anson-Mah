@@ -31,12 +31,12 @@ class Dice:
 class DiceHandler:
 	hand_size = 5
 
-	def __init__(self):
+	def __init__(self, faces):
 		self.dice_list = []
 		self.keep_list = []
 
 		for _ in range(self.hand_size):
-			self.dice_list.append(Dice(6))
+			self.dice_list.append(Dice(faces))
 			self.keep_list.append(False)
 
 	# Rolls all unkept dice
@@ -60,25 +60,40 @@ class DiceHandler:
 
 	# Matches the current hand to the highest possible Dice Poker hand
 	def score(self):
-		if self.dice_list[0] == self.dice_list[1] == self.dice_list[2] == self.dice_list[3] == self.dice_list[4]:
-			return "5oak"
+		value_list = self.show()
+		value_list.sort()
 
-def test1():
-	sigma = Dice(6)
-	for _ in range(100):
-		sigma.roll()
-		print(sigma.get_value())
+		# 5 of a Kind
+		if value_list[0] == value_list[1] == value_list[2] == value_list[3] == value_list[4]:
+			return "5 of a Kind"
 
-def test2():
-	skibidi = DiceHandler()
+		# 4 of a Kind
+		if (value_list[0] == value_list[1] == value_list[2] == value_list[3]) or (value_list[1] == value_list[2] == value_list[3] == value_list[4]):
+			return "4 of a Kind"
 
-	skibidi.roll()
-	print(skibidi.show())
-	
-	skibidi.toggle_keep(1)
-	skibidi.toggle_keep(3)
-	
-	skibidi.roll()
-	print(skibidi.show())
+		# Full House
+		if ((value_list[0] == value_list[1] == value_list[2]) and (value_list[3] == value_list[4])) or ((value_list[0] == value_list[1]) and (value_list[2] == value_list[3] == value_list[4])):
+			return "Full House"
 
-# test2()
+		# Straight
+		if value_list[0] == value_list[1] - 1 == value_list[2] - 2 == value_list[3] - 3 == value_list[4] - 4:
+			return "Straight"
+
+		# 3 of a Kind
+		if (value_list[0] == value_list[1] == value_list[2]) or (value_list[1] == value_list[2] == value_list[3]) or (value_list[2] == value_list[3] == value_list[4]):
+			return "3 of a Kind"
+
+		# Two Pair
+		if ((value_list[0] == value_list[1]) and (value_list[2] == value_list[3])) or ((value_list[1] == value_list[2]) and (value_list[3] == value_list[4])) or ((value_list[0] == value_list[1]) and (value_list[3] == value_list[4])):
+			return "Two Pair"
+
+		# Pair
+		for i in range(self.hand_size):
+			for j in range(self.hand_size):
+				if i == j:
+					continue
+				if value_list[i] == value_list[j]:
+					return "Pair"
+
+		# Highest Dice / High Card
+		return "Highest Dice"
