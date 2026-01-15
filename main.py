@@ -44,7 +44,6 @@ def play():
 
 	game = DiceHandler(dice_faces)
 	game.roll()
-	current_rolls += 1
 	while True:
 		print(f'Roll {current_rolls}/{max_rolls}')
 		print('Select some dice to Keep.')
@@ -158,7 +157,44 @@ def change_settings():
 	change_settings()
 
 def how_to_play():
-	pass
+	print("How to Play: Dice Poker")
+
+	print("\n")
+
+	print("OBJECTIVE:")
+	print("Use your dice to get the highest Dice Poker hand you possibly can.")
+
+	print("\n")
+	
+	print("GAMEPLAY LOOP:")
+	print("You start off with a free roll of 5 dice.")
+	print('You can choose various dice to "Keep". After you reroll, the dice you Keep will not get rerolled.')
+	print("Keeping dice is a useful mechanic that lets you utilize your 3 rolls to help you roll the best possible Dice Poker hand.")
+	print("After rolling 3 times, your hand will be finalized and your hand will be matched accordingly.")
+
+	print("\n")
+
+	print("DICE POKER HANDS:")
+	print("The ordering of the hands are Highest to Lowest")
+	print("5 of a Kind: Five dice that share the same pip value")
+	print("4 of a Kind: Four dice that share the same pip value")
+	print("Full House: Two dice that share a common pip value, along with Three different dice that share a common pip value")
+	print("Straight: Five dice that increase in sequential order")
+	print("3 of a Kind: Three dice that share the same pip value")
+	print("Two Pair: Two dice that share a common pip value along with Two different dice that share a common pip value.")
+	print("Pair: Two dice that share a common pip value.")
+	print("Highest Dice: None of the above hands apply.")
+
+	print("\n")
+	print("EXAMPLES OF DICE POKER HANDS:")
+	print("5 of a Kind: [6, 6, 6, 6, 6]")
+	print("4 of a Kind: [5, 5, 5, 5, 3]")
+	print("Full House: [2, 2, 3, 3, 3]")
+	print("Straight: [1, 2, 3, 4, 5]")
+	print("3 of a Kind: [4, 2, 1, 1, 1]")
+	print("Two Pair: [2, 2, 1, 5, 5]")
+	print("Pair: [6, 6, 1, 5, 2]")
+	print("Highest Dice: [2, 6, 5, 3, 1]")
 
 # Game Settings
 dice_faces = 6
