@@ -1,3 +1,7 @@
+# Name: Anson Mah
+# Project: Dice Poker
+# Date: January 2026
+
 from dicehandler import DiceHandler
 import os
 
