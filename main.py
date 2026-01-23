@@ -3,6 +3,7 @@
 # Date: January 2026
 
 from dicehandler import DiceHandler
+from display import display_dice
 import os
 
 def clear_terminal(): os.system('cls' if os.name == 'nt' else 'clear')
@@ -47,14 +48,21 @@ def play():
 	current_rolls = 0
 
 	game = DiceHandler(dice_faces)
-	game.roll()
 	current_rolls += 1
+	roll_dice_game(game)
 	while True:
-		print(f'Roll {current_rolls}/{max_rolls}')
+		print(f'Roll {current_rolls}/{max_rolls}\n')
+		print(display_dice(game.show()))
+
+		# End Round on Final Roll
+		if current_rolls == max_rolls:
+			print("You do not have any more rolls left. The round has automatically ended.")
+			break
+
 		print('Select some dice to Keep.')
 		print("------------------------------")
 		for i in range(game.hand_size):
-			print(f"{i+1}. [{"X" if game.keep_list[i] == True else ""}] {game.dice_list[i].get_value()}")
+			print(f"[{"X" if game.keep_list[i] == True else ""}] {game.dice_list[i].get_value()}")
 		print(f"{game.hand_size+1}. Roll Dice")
 		print(f"{game.hand_size+2}. End Round")
 
@@ -76,21 +84,27 @@ def play():
 		# Roll Dice Again
 		if selection == game.hand_size + 1:
 			if current_rolls < max_rolls:
-				game.roll()
+				roll_dice_game(game)
 				current_rolls += 1
-			else:
-				print("\nYou do not have any more rolls left. The round has automatically ended.")
-				break
 		
-		# End Round
+		# End Round on User Input
 		if selection == game.hand_size + 2:
-			print("\nYou have ended the round.")
+			clear_terminal()
+			print(f'Roll {current_rolls}/{max_rolls}\n')
+			print(display_dice(game.show()))
+			print("You have ended the round.")
 			break
 
 		clear_terminal()
 
 	print(f"Your Hand: {game.show()}")
 	print(f"Result: {game.score()}")
+
+def roll_dice_game(game):
+	for _ in range(50):
+		game.roll()
+		print(display_dice(game.show()))
+		clear_terminal()
 
 def view_settings():
 	global dice_faces, max_rolls
