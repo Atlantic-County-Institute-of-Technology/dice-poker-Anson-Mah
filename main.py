@@ -43,11 +43,11 @@ def main():
 				how_to_play()
 
 def play():
-	global dice_faces, max_rolls
+	global max_rolls
 
 	current_rolls = 0
 
-	game = DiceHandler(dice_faces)
+	game = DiceHandler(6, 5)  # Six Faces, Hand Size of Five
 	current_rolls += 1
 	roll_dice_game(game)
 	while True:
@@ -107,22 +107,20 @@ def roll_dice_game(game):
 		clear_terminal()
 
 def view_settings():
-	global dice_faces, max_rolls
+	global max_rolls
 	print("Current Settings")
 	print("-----------------")
-	print(f"Dice Faces: {dice_faces}")
 	print(f"Maximum Rolls: {max_rolls}")
 
 def change_settings():
-	global dice_faces, max_rolls
+	global max_rolls
 
 	# Settings Menu
 	print("Which settings would you like to change?")
 	print("-----------------------------------------")
 	print("[0]. Exit Settings")
-	print("[1]. Dice Faces")
-	print("[2]. Maximum Rolls")
-	print("[3]. Restore Default Settings")
+	print("[1]. Maximum Rolls")
+	print("[2]. Restore Default Settings")
 
 	# Input Correction
 	# If the user's input would break the program, it changes the input such that it will not break the program.
@@ -137,21 +135,6 @@ def change_settings():
 			clear_terminal()
 			main()
 		case 1:
-			# Dice Faces
-			while True:
-				try:
-					user_input = int(input("Input desired # of Dice Faces: "))
-				except ValueError:
-					print("\nPlease input a positive integer.")
-					continue
-				if user_input <= 0:
-					print("\nYou have inputted a non-positive integer. Please input a positive integer.")
-				else:
-					dice_faces = user_input
-					clear_terminal()
-					print(f"# of Dice Faces set to {dice_faces}.\n")
-					break
-		case 2:
 			# Maximum Rolls
 			while True:
 				try:
@@ -166,9 +149,8 @@ def change_settings():
 					clear_terminal()
 					print(f"# of Maximum Rolls set to {max_rolls}.\n")
 					break
-		case 3:
+		case 2:
 			# Restore Default Settings
-			dice_faces = 6
 			max_rolls = 3
 			clear_terminal()
 			print("Default Settings have been restored.\n")
@@ -218,7 +200,6 @@ def how_to_play():
 	print("Highest Dice: [2, 6, 5, 3, 1]")
 
 # Game Settings
-dice_faces = 6
 max_rolls = 3
 
 if __name__ == "__main__":

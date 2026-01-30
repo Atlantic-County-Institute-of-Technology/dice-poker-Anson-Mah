@@ -29,11 +29,10 @@ class Dice:
 		return self.value
 	
 class DiceHandler:
-	hand_size = 5
-
-	def __init__(self, faces):
+	def __init__(self, faces, hand_size):
 		self.dice_list = []
 		self.keep_list = []
+		self.hand_size = hand_size
 
 		for _ in range(self.hand_size):
 			self.dice_list.append(Dice(faces))
@@ -96,4 +95,5 @@ class DiceHandler:
 					return "Pair"
 
 		# Highest Dice / High Card
+		# This hand applies if no other hands can be applied.
 		return "Highest Dice"
